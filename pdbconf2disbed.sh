@@ -14,7 +14,6 @@ else
     low_conf_bed=$(echo "${low_conf_data}" | awk -v acc_no="${acc_no}" 'BEGIN{FS="\t";OFS="\t"}{print acc_no,$1-1,$1,"disordered",$2}')
 fi
 merge_data=$(mergeBed -o mode,mean -c 4,5 -i <(echo "${low_conf_bed}") )
-echo "${merge_data}"
 merge_data=$(echo "${merge_data}" | awk -v min_len="${min_len}" 'BEGIN{FS="\t";OFS="\t";}{if(($3-$2)>=min_len){print $0}}')
 merge_data_count=$(echo "${merge_data}" | grep -v ^$ | grep -c .)
 if [ "${merge_data_count}" -eq 0 ]
