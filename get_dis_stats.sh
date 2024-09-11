@@ -1,12 +1,11 @@
 #!/bin/bash
 bed_file=$1
-fasta_file=$2
-len_datablock=$(perl -pe 'if(/\>/){s/$/\t/};s/\n//g;s/\>/\n/g' ${fasta_file} | tail -n+2 | awk 'BEGIN{FS="\t";OFS="\t"}{print $1,length($2)}' | sort -V | uniq)
+sizes_file=$2
 prot_list=$(cut -f1 ${bed_file} | sort -V | uniq )
 for prot in ${prot_list}
 do
     dis_datablock=$(grep -w ^${prot} ${bed_file})
-    prot_len=$(echo "${len_datablock}" | grep -w ^${prot} | cut -f2)
+    prot_len=$(grep -w ^${prot} ${sizes_file} | cut -f2)
     dis_len=$(echo  "${dis_datablock}" | awk 'BEGIN{FS="\t"}{dis_len+=($3-$2)}END{print dis_len}')
     dis_frac=$(echo -e "${prot_len}\t${dis_len}" | awk '{print $2/$1}')
     dis_count=$(echo "${dis_datablock}" | wc -l)
