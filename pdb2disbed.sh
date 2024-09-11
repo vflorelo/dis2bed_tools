@@ -23,7 +23,7 @@ fi
 conf_res_data=$(grep -w ^ATOM ${pdb_file} | cut -c23-26,61-66 | sed 's/./&\t/4;s/ //g' | sort -nk1 | uniq)
 conf_bed_data=$(echo "${conf_res_data}" | awk -v acc_no="${acc_no}" 'BEGIN{FS="\t";OFS="\t"}{print acc_no,$1-1,$1,$2}')
 intersect_data=$(intersectBed -wa -a <(echo "${conf_bed_data}") -b <(echo "${dis_bed_data}"))
-merge_data=$(mergeBed -o mean -c 4 -i <(echo "${intersect_data}") | awk 'BEGIN{FS="\t";OFS="\t"}{print $1,$2,$3,"disorder",$4}' )
+merge_data=$(mergeBed -o mean -c 4 -i <(echo "${intersect_data}") | awk 'BEGIN{FS="\t";OFS="\t"}{print $1,$2,$3,"disordered",$4}' )
 merge_data_count=$(echo "${merge_data}" | grep -v ^$ | grep -c .)
 if [ "${merge_data_count}" -eq 0 ]
 then
